@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http,$ionicPopup) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -8,9 +8,61 @@ angular.module('starter.controllers', [])
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+  
+  
+  // ----receive function----v
+    function getHttpComuni(url, callback) {
+        $http.get(url)
+        .then(function(response) {
+            parser = new DOMParser();
+            xmlDoc = parser.parseFromString(response.data, "text/xml");
+
+            var jsonComune = [];
+            for(var i=0; i< xmlDoc.getElementsByTagName("option").length; i++){
+                var com = xmlDoc.getElementsByTagName("option")[i].childNodes[0].nodeValue ;
+                jsonComune.push({ value: com.split('(')['0'] , displayName : com });
+            }
+            $scope.operators = jsonComune;
+
+        });
+    }
+
+             // -----------the url---v         ------------the callback---v
+    function getHttpCF(url, callback) {
+        $http.get(url)
+        .then(function(response) {
+            
+            parser = new DOMParser();
+            xmlDoc = parser.parseFromString(response.data, "text/xml");
+            
+            
+            console.log('getHttpCF', xmlDoc.getElementsByTagName("string")[0].childNodes[0].nodeValue);
+
+            
+            
+            $scope.showAlert = function() {
+	
+                var alertPopup = $ionicPopup.alert({
+                   title: 'Codice Fiscale',
+                   template: xmlDoc.getElementsByTagName("string")[0].childNodes[0].nodeValue
+                });
+
+                alertPopup.then(function(res) {
+                   // Custom functionality....
+                });
+             };
+
+            
+            
+        });
+    }
 
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.dataForm = {};
+  $scope.CF = 'aaa';
+  $scope.sesso = [{value: 'F',displayName:'Femmina'},{value: 'M',displayName:'Maschio'}];
+  $scope.dataForm.listComuni ={operator: ''};
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -38,6 +90,24 @@ angular.module('starter.controllers', [])
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
+  };
+  
+  
+  $scope.getComuni = function() {
+    var mydata = getHttpComuni("http://www.codicefiscale.com/loadComuni.php?mask="+$scope.dataForm.comune, function (resp) {
+//        console.log(resp);
+    });
+  };
+  
+  
+  $scope.calcCF = function() {
+      
+      var req = 'Nome='+$scope.dataForm.nome+'&Cognome='+$scope.dataForm.cognome+'&ComuneNascita='+$scope.dataForm.listComuni+'&DataNascita='+$scope.dataForm.nascita+'&Sesso='+$scope.dataForm.sesso;
+      
+     var mydata = getHttpCF("http://webservices.dotnethell.it/codicefiscale.asmx/CalcolaCodiceFiscale?"+req, function (resp) {
+//        console.log(resp);
+        });
+
   };
 })
 

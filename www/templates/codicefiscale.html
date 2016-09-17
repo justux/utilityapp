@@ -1,0 +1,62 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Login</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+      
+      
+      
+    <form ng-submit="calcCF()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Cognome</span>
+          <input type="text" ng-model="dataForm.cognome">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Nome</span>
+          <input type="text" ng-model="dataForm.nome">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Data di nascita</span>
+          <input type="text" ng-model="dataForm.nascita">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Sesso</span>
+
+          
+          <select ng-model="dataForm.sesso">
+            <option ng-selected=""
+                    ng-repeat="operator in sesso"
+                    value="{{operator.value}}">
+              {{operator.displayName}}
+            </option>
+            </select>
+          
+          
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Comune di nascita</span>
+          <input type="text" ng-model="dataForm.comune" ng-change="getComuni()">
+          
+          <select ng-model="dataForm.listComuni">
+            <option ng-selected="{{operator.value == dataForm.listComuni.operator}}"
+                    ng-repeat="operator in operators"
+                    value="{{operator.value}}">
+              {{operator.displayName}}
+            </option>
+            </select>
+        </label>
+
+          
+          
+
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Log in</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

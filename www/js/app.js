@@ -40,6 +40,14 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     }
   })
+  .state('app.codicefiscale', {
+    url: '/codicefiscale',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/codicefiscale.html'
+      }
+    }
+  })
 
   .state('app.browse', {
       url: '/browse',
@@ -69,5 +77,5 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/codicefiscale');
 });
